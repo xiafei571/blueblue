@@ -17,8 +17,8 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/sausheong/ble"
-	"github.com/sausheong/ble/linux"
+	"github.com/xiafei/ble"
+	"github.com/xiafei/ble/linux"
 )
 
 var dur *time.Duration
