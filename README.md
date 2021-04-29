@@ -12,4 +12,4 @@ BlueBlue is a Bluetooth LE scanner and spelunking tool I used to muck around wit
 
 `./blueblue` 
 
-if use "go run main.app", it will generate a temp directory, which may cause path problems.
+if use "`go run main.app`", it will generate a temp directory, which may cause path problems.
