@@ -104,15 +104,22 @@ func serve() {
 
 // index for web server
 func index(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("index for web server", *dir+"/public/index.html")
-	t, _ := template.ParseFiles(*dir + "/public/index.html")
+	t, err := template.ParseFiles(*dir + "/public/index.html")
+	if err == nil {
+		fmt.Println("error: ", err)
+		fmt.Println("index for web server", *dir+"/public/index.html")
+	}
 	t.Execute(w, stop)
 }
 
 // handler to show list of devices
 func showDevices(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles(*dir + "/public/devices.html")
+	t, err := template.ParseFiles(*dir + "/public/devices.html")
 
+	if err == nil {
+		fmt.Println("error: ", err)
+		fmt.Println("index for web server", *dir+"/public/devices.html")
+	}
 	// convert map to array, added detect since duration and
 	// remove anything that's more than 60 seconds
 	data := []Device{}
