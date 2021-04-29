@@ -104,6 +104,7 @@ func serve() {
 
 // index for web server
 func index(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("index for web server", *dir+"/public/index.html")
 	t, _ := template.ParseFiles(*dir + "/public/index.html")
 	t.Execute(w, stop)
 }
