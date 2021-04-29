@@ -2,14 +2,14 @@
 
 BlueBlue is a Bluetooth LE scanner and spelunking tool I used to muck around with BLE advertisements. 
 
-$ go mod init
+`go mod init`
 
-$ go clean -modcache
+`go clean -modcache`
 
-$ go get ...
+`go get ...`
 
-$ go build
+`go build`
 
-$ ./blueblue 
+`./blueblue` 
 
 if use "go run main.app", it will generate a temp directory, which may cause path problems.
