@@ -74,17 +74,16 @@ func main() {
 // Handle the advertisement scan
 func adScanHandler(a ble.Advertisement) {
 	mutex.Lock()
-	str_adv := formatHex(hex.EncodeToString(a.LEAdvertisingReportRaw()))
-	str_adv1 := hex.EncodeToString(a.LEAdvertisingReportRaw())
-	fmt.Println("str_adv:", str_adv)
-	fmt.Println("str_adv1:", str_adv1)
+	str_adv := hex.EncodeToString(a.LEAdvertisingReportRaw())
+	event_type := str_adv[4:6]
+	fmt.Println("event_type:", event_type)
 
 	device := Device{
 		Address:       a.Addr().String(),
 		Detected:      time.Now(),
 		Name:          clean(a.LocalName()),
 		RSSI:          a.RSSI(),
-		Advertisement: formatHex(hex.EncodeToString(a.LEAdvertisingReportRaw())),
+		Advertisement: formatHex(str_adv),
 		ScanResponse:  formatHex(hex.EncodeToString(a.ScanResponseRaw())),
 	}
 	devices[a.Addr().String()] = device
