@@ -105,7 +105,7 @@ func serve() {
 // index for web server
 func index(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(*dir + "/public/index.html")
-	if err == nil {
+	if err != nil {
 		fmt.Println("error: ", err)
 		fmt.Println("index for web server", *dir+"/public/index.html")
 	}
@@ -116,7 +116,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 func showDevices(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(*dir + "/public/devices.html")
 
-	if err == nil {
+	if err != nil {
 		fmt.Println("error: ", err)
 		fmt.Println("index for web server", *dir+"/public/devices.html")
 	}
