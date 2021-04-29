@@ -95,7 +95,7 @@ func serve() {
 	mux.HandleFunc("/start", startScan)
 	mux.HandleFunc("/devices", showDevices)
 	server := &http.Server{
-		Addr:    "0.0.0.0:" + strconv.Itoa(*port),
+		Addr:    "127.0.0.1:" + strconv.Itoa(*port),
 		Handler: mux,
 	}
 	fmt.Println("Started blueblue server at", server.Addr)
