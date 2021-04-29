@@ -36,6 +36,7 @@ type Device struct {
 	RSSI          int       `json:"rssi"`
 	Advertisement string    `json:"advertisement"`
 	ScanResponse  string    `json:"scanresponse"`
+	EventType     string    `json:"eventtype"`
 }
 
 var mutex sync.RWMutex
@@ -75,8 +76,6 @@ func main() {
 func adScanHandler(a ble.Advertisement) {
 	mutex.Lock()
 	str_adv := hex.EncodeToString(a.LEAdvertisingReportRaw())
-	event_type := str_adv[4:6]
-	fmt.Println("event_type:", event_type)
 
 	device := Device{
 		Address:       a.Addr().String(),
@@ -85,6 +84,7 @@ func adScanHandler(a ble.Advertisement) {
 		RSSI:          a.RSSI(),
 		Advertisement: formatHex(str_adv),
 		ScanResponse:  formatHex(hex.EncodeToString(a.ScanResponseRaw())),
+		EventType:     formatEventType(str_adv[4:6]),
 	}
 	devices[a.Addr().String()] = device
 	mutex.Unlock()
@@ -178,6 +178,27 @@ func formatHex(instr string) (outstr string) {
 		if i%2 == 0 {
 			outstr += instr[i:i+2] + " "
 		}
+	}
+	return
+}
+
+func formatEventType(instr string) (outstr string) {
+	if instr == "00" {
+		outstr = "ADV_IND"
+	} else if instr == "01" {
+		outstr = "ADV_DIRECT_IND"
+	} else if instr == "02" {
+		outstr = "ADV_NONCONN_IND"
+	} else if instr == "03" {
+		outstr = "SCAN_REQ"
+	} else if instr == "10" {
+		outstr = "SCAN_RSP"
+	} else if instr == "11" {
+		outstr = "CONNECT_REQ"
+	} else if instr == "12" {
+		outstr = "ADV_SCAN_IND"
+	} else {
+		outstr = "UNKNOWN"
 	}
 	return
 }
