@@ -7,8 +7,6 @@ import (
 	"github.com/streadway/amqp"
 )
 
-const MQURL = "amqp://blue:blueblue@128.199.116.194:5672//blue"
-
 //rabbitMQ结构体
 type RabbitMQ struct {
 	conn    *amqp.Connection
@@ -24,7 +22,7 @@ type RabbitMQ struct {
 }
 
 //创建结构体实例
-func NewRabbitMQ(queueName string, exchange string, key string) *RabbitMQ {
+func NewRabbitMQ(queueName string, exchange string, key string, MQURL string) *RabbitMQ {
 	return &RabbitMQ{QueueName: queueName, Exchange: exchange, Key: key, Mqurl: MQURL}
 }
 
@@ -43,9 +41,9 @@ func (r *RabbitMQ) failOnErr(err error, message string) {
 }
 
 //创建简单模式下RabbitMQ实例
-func NewRabbitMQSimple(queueName string) *RabbitMQ {
+func NewRabbitMQSimple(MQURL string, queueName string) *RabbitMQ {
 	//创建RabbitMQ实例
-	rabbitmq := NewRabbitMQ(queueName, "", "")
+	rabbitmq := NewRabbitMQ(queueName, "", "", MQURL)
 	var err error
 	//获取connection
 	rabbitmq.conn, err = amqp.Dial(rabbitmq.Mqurl)
