@@ -7,7 +7,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-const MQURL = "amqp://blue:blue@128.199.116.194:5672/blue"
+const MQURL = "amqp://blue:blueblue@128.199.116.194:5672/blue"
 
 //rabbitMQ结构体
 type RabbitMQ struct {
