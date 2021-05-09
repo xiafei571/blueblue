@@ -92,6 +92,7 @@ func adScanHandler(a ble.Advertisement) {
 	}
 	devices[a.Addr().String()] = device
 
+	logger.Println("device addr:" + a.Addr().String())
 	mqPublish(device)
 
 	mutex.Unlock()
@@ -102,7 +103,7 @@ func adScanHandler(a ble.Advertisement) {
 func mqPublish(device Device) {
 	data, err := json.Marshal(device)
 	if err != nil {
-		fmt.Println(err)
+		logger.Println(err)
 	}
 	mq.PublishByte(data)
 }
