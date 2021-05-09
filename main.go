@@ -1,8 +1,11 @@
 package main
 
 import (
+	it "blueblue/init"
+	rabbitMQ "blueblue/rabbitMQ"
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"html/template"
@@ -26,6 +29,7 @@ var dir *string
 var port *int
 var logger *log.Logger
 var stop bool = true
+var mq = connect_MQ()
 
 // Device represents a BLE device
 type Device struct {
@@ -87,7 +91,20 @@ func adScanHandler(a ble.Advertisement) {
 		EventType:     formatEventType(str_adv[4:6]),
 	}
 	devices[a.Addr().String()] = device
+
+	mqPublish(device)
+
 	mutex.Unlock()
+
+}
+
+// publish to mq
+func mqPublish(device Device) {
+	data, err := json.Marshal(device)
+	if err != nil {
+		fmt.Println(err)
+	}
+	mq.PublishByte(data)
 }
 
 // start the web server
@@ -208,4 +225,17 @@ func clean(input string) string {
 	return strings.TrimFunc(input, func(r rune) bool {
 		return !unicode.IsGraphic(r)
 	})
+}
+
+func connect_MQ() *rabbitMQ.RabbitMQ {
+	config := it.InitConfigure()
+	user := config.GetString("MQ.User")
+	password := config.GetString("MQ.Password")
+	ip := config.GetString("MQ.IP")
+	vhost := config.GetString("MQ.Vhost")
+	MQURL := "amqp://" + user + ":" + password + "@" + ip + "/" + vhost
+	fmt.Println(MQURL)
+
+	rabbitmq := rabbitMQ.NewRabbitMQSimple(MQURL, ""+"blue")
+	return rabbitmq
 }
