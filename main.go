@@ -184,6 +184,7 @@ func scan() {
 	for !stop {
 		ctx := ble.WithSigHandler(context.WithTimeout(context.Background(), *dur))
 		ble.Scan(ctx, false, adScanHandler, nil)
+		time.Sleep(30 * time.Second)
 	}
 	logger.Println("Stopped scanning.")
 	stop = true
