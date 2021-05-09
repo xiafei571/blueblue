@@ -67,12 +67,12 @@
               }
             });
         });
-        // refresh every 1 seconds
+        // refresh every 10 seconds
         setInterval(function() {
             $.get('/devices', function(data) {
                 $('#devices').html(data);
             });
-        }, 1000);
+        }, 10000);
       });
     </script>
   </body>
