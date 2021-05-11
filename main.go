@@ -30,9 +30,11 @@ var port *int
 var logger *log.Logger
 var stop bool = true
 var mq = connect_MQ()
+var sensorName = "sensor_01"
 
 // Device represents a BLE device
 type Device struct {
+	Sensor        string    `json:"sensor"`
 	Address       string    `json:"address"`
 	Detected      time.Time `json:"detected"`
 	Since         string    `json:"since"`
@@ -73,7 +75,8 @@ func main() {
 		logger.Fatal("Can't create new device:", err)
 	}
 	ble.SetDefaultDevice(d)
-	serve()
+	// serve()
+	scanBackend()
 }
 
 // Handle the advertisement scan
@@ -91,6 +94,28 @@ func adScanHandler(a ble.Advertisement) {
 		EventType:     formatEventType(str_adv[4:6]),
 	}
 	devices[a.Addr().String()] = device
+
+	logger.Println("device addr:" + a.Addr().String())
+	mqPublish(device)
+
+	mutex.Unlock()
+
+}
+
+func adScanAndPublishHandler(a ble.Advertisement) {
+	mutex.Lock()
+	str_adv := hex.EncodeToString(a.LEAdvertisingReportRaw())
+
+	device := Device{
+		Sensor:        sensorName,
+		Address:       a.Addr().String(),
+		Detected:      time.Now(),
+		Name:          clean(a.LocalName()),
+		RSSI:          a.RSSI(),
+		Advertisement: formatHex(str_adv),
+		ScanResponse:  formatHex(hex.EncodeToString(a.ScanResponseRaw())),
+		EventType:     formatEventType(str_adv[4:6]),
+	}
 
 	logger.Println("device addr:" + a.Addr().String())
 	mqPublish(device)
@@ -188,6 +213,17 @@ func scan() {
 	}
 	logger.Println("Stopped scanning.")
 	stop = true
+}
+
+func scanBackend() {
+	stop = true
+	logger.Println("Started scanning every", *dur)
+	logger.Println("Ctrl + c to stop")
+	for !stop {
+		ctx := ble.WithSigHandler(context.WithTimeout(context.Background(), *dur))
+		ble.Scan(ctx, false, adScanAndPublishHandler, nil)
+		time.Sleep(30 * time.Second)
+	}
 }
 
 // reformat string for proper display of hex
