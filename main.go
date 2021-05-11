@@ -76,7 +76,7 @@ func main() {
 	}
 	ble.SetDefaultDevice(d)
 	// serve()
-	scanBackend()
+	go scanBackend()
 }
 
 // Handle the advertisement scan
@@ -85,6 +85,7 @@ func adScanHandler(a ble.Advertisement) {
 	str_adv := hex.EncodeToString(a.LEAdvertisingReportRaw())
 
 	device := Device{
+		Sensor:        sensorName,
 		Address:       a.Addr().String(),
 		Detected:      time.Now(),
 		Name:          clean(a.LocalName()),
