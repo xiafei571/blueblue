@@ -76,7 +76,7 @@ func main() {
 	}
 	ble.SetDefaultDevice(d)
 	// serve()
-	go scanBackend()
+	scanBackend()
 }
 
 // Handle the advertisement scan
