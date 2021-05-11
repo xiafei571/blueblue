@@ -1,5 +1,5 @@
 MQ:
-  IP: 128.199.116.194:5672
+  IP: 128dot199dot116dot194:5672
   Vhost: blue
   User: blue
   Password: blueblue
