@@ -217,10 +217,9 @@ func scan() {
 }
 
 func scanBackend() {
-	stop = true
 	logger.Println("Started scanning every", *dur)
 	logger.Println("Ctrl + c to stop")
-	for !stop {
+	for true {
 		ctx := ble.WithSigHandler(context.WithTimeout(context.Background(), *dur))
 		ble.Scan(ctx, false, adScanAndPublishHandler, nil)
 		time.Sleep(30 * time.Second)
